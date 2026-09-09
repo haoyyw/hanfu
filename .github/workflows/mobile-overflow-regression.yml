@@ -1,0 +1,20 @@
+name: Mobile overflow regression
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check iOS-safe mobile width rules
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s = Path('index.html').read_text(encoding='utf-8')
+          assert '--shell:min(100% - 28px,1220px)' not in s, 'iOS-unsafe shell math is still present'
+          assert '/* mobile-root-overflow-fix */' in s, 'mobile root overflow hardening is missing'
+          assert 'min-width:0' in s, 'grid/flex intrinsic-width guard is missing'
+          PY
