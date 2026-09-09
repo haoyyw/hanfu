@@ -5,6 +5,7 @@ on:
     branches: [hd-assets]
     paths:
       - 'assets/hd-b64/*.txt'
+      - '.github/workflows/assemble-hd-b64.yml'
 
 permissions:
   contents: write
@@ -17,23 +18,36 @@ jobs:
         with:
           ref: hd-assets
           fetch-depth: 0
-      - name: Decode complete AVIF pairs
+      - name: Decode staged AVIF assets
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p assets/images
           built=0
+          skipped=0
           for p0 in assets/hd-b64/*.0.txt; do
             [ -e "$p0" ] || continue
             p1="${p0%.0.txt}.1.txt"
-            [ -f "$p1" ] || continue
             name="$(basename "${p0%.0.txt}")"
-            cat "$p0" "$p1" | tr -d '\n\r' | base64 -d > "assets/images/${name}.avif"
-            test -s "assets/images/${name}.avif"
-            built=1
+            tmp="$(mktemp)"
+            if [ -f "$p1" ]; then
+              cat "$p0" "$p1" | tr -cd 'A-Za-z0-9+/=' > "$tmp"
+            else
+              tr -cd 'A-Za-z0-9+/=' < "$p0" > "$tmp"
+            fi
+            if base64 -d "$tmp" > "assets/images/${name}.avif" 2>/dev/null && test -s "assets/images/${name}.avif"; then
+              echo "assembled ${name}.avif"
+              built=1
+            else
+              echo "skipped invalid staged asset: ${name}"
+              rm -f "assets/images/${name}.avif"
+              skipped=$((skipped+1))
+            fi
+            rm -f "$tmp"
           done
+          echo "assembled_any=$built skipped=$skipped"
           if [ "$built" -eq 0 ]; then
-            echo 'No complete base64 pairs yet.'
+            echo 'No valid staged assets were assembled.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
@@ -44,4 +58,5 @@ jobs:
             exit 0
           fi
           git commit -m 'chore: assemble HD AVIF assets'
+          git pull --rebase origin hd-assets
           git push origin HEAD:hd-assets
