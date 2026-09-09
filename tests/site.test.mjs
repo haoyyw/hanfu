@@ -10,23 +10,29 @@ test('bilingual labels promote the active language', () => {
   assert.match(html, /html\[data-locale="zh"\][^{]*\.bilabel[^\n]*\.zh/, 'ZH locale must promote Chinese labels');
   assert.match(html, /html\[data-locale="en"\][^{]*\.bilabel[^\n]*\.zh/, 'EN locale must demote Chinese labels');
   assert.match(html, /html\[data-locale="zh"\][^{]*\.bilabel[^\n]*\.en/, 'ZH locale must demote English labels');
+  assert.match(html, /tab-bilabel/, 'dynasty tabs should follow the active-language hierarchy');
+  assert.match(html, /dynasty-bilabel/, 'dynamic dynasty title should follow the active-language hierarchy');
 });
 
-test('each experience section uses its dedicated image and PhDessert uses the lowercase Pages path', () => {
+test('HD assets and dedicated ceremonial visual are wired into the page', () => {
   for (const ref of [
-    'assets/images/hero-tang.avif',
     'assets/images/dynasty-han.avif',
     'assets/images/dynasty-tang.avif',
     'assets/images/dynasty-song.avif',
     'assets/images/dynasty-ming.avif',
     'assets/images/styling.avif',
     'assets/images/jewellery.avif',
-    'assets/images/ceremonial.avif',
-    'assets/images/tea.avif',
-    'assets/images/pastry.avif',
-    'assets/images/coming.avif'
-  ]) assert.ok(html.includes(ref), `missing image reference: ${ref}`);
+    'assets/images/ceremonial.avif'
+  ]) assert.ok(html.includes(ref), `missing HD image reference: ${ref}`);
 
+  assert.match(html, /ceremonial\.avif[^>]+Chinese ceremonial and bridal styling/, 'ceremonial section must use its dedicated image');
+});
+
+test('PhDessert integration uses the live lowercase path and high-resolution pastry product images', () => {
   assert.ok(html.includes('https://haoyyw.github.io/phdessert/'), 'PhDessert link should use lowercase repo path');
   assert.ok(!html.includes('https://haoyyw.github.io/PHDESSERT/'), 'uppercase PhDessert Pages path must be removed');
+  for (const product of ['peach-blossom.webp', 'osmanthus-cake.webp', 'mung-bean-cake.webp', 'rice-cake.webp']) {
+    assert.ok(html.includes(product), `missing PhDessert product image: ${product}`);
+  }
+  assert.ok(!html.includes('chinese-tasting-box.webp'), 'obsolete broken tasting-box image should be removed');
 });
