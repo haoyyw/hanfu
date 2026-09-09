@@ -1,0 +1,48 @@
+name: Build HD assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [hd-assets]
+    paths:
+      - '.asset-chunks/**'
+      - '.github/workflows/build-hd-assets.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: hd-assets
+      - name: Decode AVIF assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/images
+          for dir in .asset-chunks/*; do
+            [ -d "$dir" ] || continue
+            name="$(basename "$dir")"
+            cat "$dir"/part-*.txt | tr -d '\n\r' | base64 --decode > "assets/images/${name}.avif"
+          done
+          file assets/images/*.avif
+          ls -lh assets/images/*.avif
+      - name: Verify expected assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in hero-tang dynasty-han dynasty-tang dynasty-song dynasty-ming styling jewellery ceremonial tea pastry coming; do
+            test -s "assets/images/${name}.avif"
+          done
+      - name: Commit decoded assets
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/*.avif
+          git diff --cached --quiet && exit 0
+          git commit -m "feat: build HD AVIF image assets"
+          git push origin HEAD:hd-assets
