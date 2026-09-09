@@ -16,5 +16,7 @@ jobs:
           s = Path('index.html').read_text(encoding='utf-8')
           assert '--shell:min(100% - 28px,1220px)' not in s, 'iOS-unsafe shell math is still present'
           assert '/* mobile-root-overflow-fix */' in s, 'mobile root overflow hardening is missing'
-          assert 'min-width:0' in s, 'grid/flex intrinsic-width guard is missing'
+          assert 'html,body{width:100%;max-width:100%;overflow-x:hidden}' in s, 'root viewport lock is missing'
+          assert '.shell{width:calc(100% - 28px);max-width:1220px}' in s, 'mobile shell width is missing'
+          assert 'min-width:0;max-width:100%' in s, 'grid/flex intrinsic-width guard is missing'
           PY
