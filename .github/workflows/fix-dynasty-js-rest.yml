@@ -1,0 +1,73 @@
+name: Apply dynasty tab syntax fix via REST
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-dynasty-js-rest.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch and verify
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          broken = "lines.join('\n')"
+          fixed = "lines.join('\\n')"
+          n = s.count(broken)
+          if n != 1:
+              raise SystemExit(f'Expected exactly one malformed join literal; found {n}')
+          s = s.replace(broken, fixed)
+          p.write_text(s, encoding='utf-8')
+          m = re.search(r'<script>(.*?)</script>', s, re.S)
+          if not m:
+              raise SystemExit('Inline script not found')
+          Path('/tmp/hanfu.js').write_text(m.group(1), encoding='utf-8')
+          for key in ('han','tang','song','ming'):
+              if f'data-dynasty="{key}"' not in s:
+                  raise SystemExit(f'Missing tab: {key}')
+              if f"{key}-look-1-v7.webp" not in s or f"{key}-look-2-v7.webp" not in s:
+                  raise SystemExit(f'Missing look wiring: {key}')
+          PY
+          node --check /tmp/hanfu.js
+      - name: Update index.html through GitHub Contents API
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os, json, base64, urllib.request
+          from pathlib import Path
+          repo = os.environ['REPO']
+          token = os.environ['GH_TOKEN']
+          api = f'https://api.github.com/repos/{repo}/contents/index.html'
+          headers = {
+              'Authorization': f'Bearer {token}',
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+              'User-Agent': 'hanfu-dynasty-fix'
+          }
+          req = urllib.request.Request(api + '?ref=main', headers=headers)
+          with urllib.request.urlopen(req) as r:
+              current = json.load(r)
+          payload = json.dumps({
+              'message': 'Fix dynasty tab JavaScript syntax',
+              'content': base64.b64encode(Path('index.html').read_bytes()).decode(),
+              'sha': current['sha'],
+              'branch': 'main'
+          }).encode()
+          req = urllib.request.Request(api, data=payload, method='PUT', headers={**headers, 'Content-Type':'application/json'})
+          with urllib.request.urlopen(req) as r:
+              result = json.load(r)
+          print('updated commit', result['commit']['sha'])
+          PY
