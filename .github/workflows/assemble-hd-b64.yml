@@ -1,0 +1,47 @@
+name: Assemble HD b64 assets
+
+on:
+  push:
+    branches: [hd-assets]
+    paths:
+      - 'assets/hd-b64/*.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: hd-assets
+          fetch-depth: 0
+      - name: Decode complete AVIF pairs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/images
+          built=0
+          for p0 in assets/hd-b64/*.0.txt; do
+            [ -e "$p0" ] || continue
+            p1="${p0%.0.txt}.1.txt"
+            [ -f "$p1" ] || continue
+            name="$(basename "${p0%.0.txt}")"
+            cat "$p0" "$p1" | tr -d '\n\r' | base64 -d > "assets/images/${name}.avif"
+            test -s "assets/images/${name}.avif"
+            built=1
+          done
+          if [ "$built" -eq 0 ]; then
+            echo 'No complete base64 pairs yet.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/images/*.avif
+          if git diff --cached --quiet; then
+            echo 'No image changes to commit.'
+            exit 0
+          fi
+          git commit -m 'chore: assemble HD AVIF assets'
+          git push origin HEAD:hd-assets
