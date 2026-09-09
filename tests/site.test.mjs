@@ -14,6 +14,12 @@ test('bilingual labels promote the active language', () => {
   assert.match(html, /dynasty-bilabel/, 'dynamic dynasty title should follow the active-language hierarchy');
 });
 
+test('bilingual hierarchy remains visually clean in hero, footer and pastry cards', () => {
+  assert.match(html, /\.hero \.hero-brand>span\{[^}]*margin:0/, 'hero bilingual children must clear legacy margins');
+  assert.match(html, /\.footer strong\.bilabel\{[^}]*display:flex/, 'footer bilingual brand must remain a flex ordering context');
+  assert.match(html, /\.pastry-item \.bilabel span\{[^}]*padding:0/, 'pastry bilingual child labels must clear legacy padding');
+});
+
 test('HD assets and dedicated ceremonial visual are wired into the page', () => {
   for (const ref of [
     'assets/images/dynasty-han.avif',

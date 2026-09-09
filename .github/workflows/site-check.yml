@@ -21,6 +21,8 @@ jobs:
           node-version: '22'
       - name: Apply deterministic site upgrade
         run: python scripts/upgrade-site.py
+      - name: Refine bilingual visual hierarchy
+        run: python scripts/refine-locale.py
       - name: Run site tests
         run: npm test
       - name: Commit verified site upgrade
@@ -34,6 +36,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'feat: publish HD visuals and locale-aware bilingual hierarchy'
+          git commit -m 'style: refine locale-aware bilingual hierarchy'
           git pull --rebase origin hd-assets
           git push origin HEAD:hd-assets
