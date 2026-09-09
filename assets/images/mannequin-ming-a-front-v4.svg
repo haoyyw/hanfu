@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100" width="800" height="1100">
+<defs>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000" flood-opacity=".18"/></filter>
+  <pattern id="grain" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="1" fill="#ffffff" opacity=".05"/><circle cx="16" cy="13" r=".8" fill="#000000" opacity=".04"/></pattern>
+  <pattern id="cloud" width="68" height="68" patternUnits="userSpaceOnUse"><path d="M8 39c10-19 27-17 31-2 9-8 20 0 18 11H13c-7 0-10-5-5-9z" fill="none" stroke="currentColor" stroke-width="2" opacity=".45"/></pattern>
+</defs>
+<rect width="800" height="1100" fill="#eadfd5"/>
+<rect width="800" height="1100" fill="url(#grain)"/>
+<rect x="44" y="44" width="712" height="1012" rx="2" fill="#fff" opacity=".12" stroke="#6d5a49" stroke-opacity=".18"/>
+<ellipse cx="400" cy="1010" rx="200" ry="28" fill="#000" opacity=".10"/>
+
+<g filter="url(#shadow)">
+  <rect x="377" y="98" width="46" height="72" rx="12" fill="#3a2524"/>
+  <circle cx="400" cy="91" r="13" fill="#3a2524"/>
+  <path d="M344 168 Q400 145 456 168 L470 266 Q400 294 330 266Z" fill="#d9c7b1"/>
+  <path d="M365 253 L338 510 L370 815 L430 815 L462 510 L435 253Z" fill="#d9c7b1" opacity=".85"/>
+<path d="M320 420 Q400 438 480 420 L520 935 Q400 978 280 935Z" fill="#9f2f2c"/><rect x="350" y="444" width="100" height="462" fill="#eee3d7" stroke="#b98b52" stroke-width="5"/><path d="M304 454 L296 916" stroke="#647765" stroke-width="4" opacity=".5"/><path d="M330 454 L322 916" stroke="#647765" stroke-width="4" opacity=".5"/><path d="M470 454 L478 916" stroke="#647765" stroke-width="4" opacity=".5"/><path d="M496 454 L504 916" stroke="#647765" stroke-width="4" opacity=".5"/><path d="M316 205 Q400 176 484 205 L500 435 Q400 462 300 435Z" fill="#eee3d7" stroke="#b98b52" stroke-width="5"/><path d="M320 224 Q245 260 190 390 L238 442 Q305 360 355 305Z" fill="#eee3d7" stroke="#b98b52" stroke-width="5"/><path d="M480 224 Q555 260 610 390 L562 442 Q495 360 445 305Z" fill="#eee3d7" stroke="#b98b52" stroke-width="5"/><path d="M358 204 L400 278 L442 204" fill="none" stroke="#9f2f2c" stroke-width="15"/><rect x="316" y="400" width="168" height="34" fill="#b98b52"/><g color="#647765"><rect x="365" y="520" width="70" height="280" fill="url(#cloud)" opacity=".5"/></g></g><text x="400" y="1040" text-anchor="middle" font-family="Georgia,serif" font-size="22" letter-spacing="4" fill="#54483d">MING · LOOK A · FRONT</text></svg>

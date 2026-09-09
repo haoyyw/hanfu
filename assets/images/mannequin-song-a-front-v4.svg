@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100" width="800" height="1100">
+<defs>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000" flood-opacity=".18"/></filter>
+  <pattern id="grain" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="1" fill="#ffffff" opacity=".05"/><circle cx="16" cy="13" r=".8" fill="#000000" opacity=".04"/></pattern>
+  <pattern id="cloud" width="68" height="68" patternUnits="userSpaceOnUse"><path d="M8 39c10-19 27-17 31-2 9-8 20 0 18 11H13c-7 0-10-5-5-9z" fill="none" stroke="currentColor" stroke-width="2" opacity=".45"/></pattern>
+</defs>
+<rect width="800" height="1100" fill="#e7e1d6"/>
+<rect width="800" height="1100" fill="url(#grain)"/>
+<rect x="44" y="44" width="712" height="1012" rx="2" fill="#fff" opacity=".12" stroke="#6d5a49" stroke-opacity=".18"/>
+<ellipse cx="400" cy="1010" rx="200" ry="28" fill="#000" opacity=".10"/>
+
+<g filter="url(#shadow)">
+  <rect x="377" y="98" width="46" height="72" rx="12" fill="#343a35"/>
+  <circle cx="400" cy="91" r="13" fill="#343a35"/>
+  <path d="M344 168 Q400 145 456 168 L470 266 Q400 294 330 266Z" fill="#d8c8b7"/>
+  <path d="M365 253 L338 510 L370 815 L430 815 L462 510 L435 253Z" fill="#d8c8b7" opacity=".85"/>
+<path d="M335 360 Q400 372 465 360 L500 930 Q400 968 300 930Z" fill="#f1eadc"/><path d="M330 382 L322 915" stroke="#c2a87a" stroke-width="3" opacity=".35"/><path d="M358 382 L350 915" stroke="#c2a87a" stroke-width="3" opacity=".35"/><path d="M386 382 L378 915" stroke="#c2a87a" stroke-width="3" opacity=".35"/><path d="M414 382 L422 915" stroke="#c2a87a" stroke-width="3" opacity=".35"/><path d="M442 382 L450 915" stroke="#c2a87a" stroke-width="3" opacity=".35"/><path d="M470 382 L478 915" stroke="#c2a87a" stroke-width="3" opacity=".35"/><path d="M352 205 Q400 188 448 205 L462 430 L338 430Z" fill="#f1eadc"/><path d="M318 210 Q355 190 380 205 L370 900 L278 900 L308 425 L245 500 L205 460 L300 260Z" fill="#a9b8ac" stroke="#657d70" stroke-width="5"/><path d="M482 210 Q445 190 420 205 L430 900 L522 900 L492 425 L555 500 L595 460 L500 260Z" fill="#a9b8ac" stroke="#657d70" stroke-width="5"/><path d="M380 210 L370 900 M420 210 L430 900" stroke="#657d70" stroke-width="7"/></g><text x="400" y="1040" text-anchor="middle" font-family="Georgia,serif" font-size="22" letter-spacing="4" fill="#54483d">SONG · LOOK A · FRONT</text></svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100" width="800" height="1100">
+<defs>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000" flood-opacity=".18"/></filter>
+  <pattern id="grain" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="1" fill="#ffffff" opacity=".05"/><circle cx="16" cy="13" r=".8" fill="#000000" opacity=".04"/></pattern>
+  <pattern id="cloud" width="68" height="68" patternUnits="userSpaceOnUse"><path d="M8 39c10-19 27-17 31-2 9-8 20 0 18 11H13c-7 0-10-5-5-9z" fill="none" stroke="currentColor" stroke-width="2" opacity=".45"/></pattern>
+</defs>
+<rect width="800" height="1100" fill="#ded3c5"/>
+<rect width="800" height="1100" fill="url(#grain)"/>
+<rect x="44" y="44" width="712" height="1012" rx="2" fill="#fff" opacity=".12" stroke="#6d5a49" stroke-opacity=".18"/>
+<ellipse cx="400" cy="1010" rx="200" ry="28" fill="#000" opacity=".10"/>
+
+<g filter="url(#shadow)">
+  <rect x="377" y="98" width="46" height="72" rx="12" fill="#171513"/>
+  <circle cx="400" cy="91" r="13" fill="#171513"/>
+  <path d="M344 168 Q400 145 456 168 L470 266 Q400 294 330 266Z" fill="#d6c3ad"/>
+  <path d="M365 253 L338 510 L370 815 L430 815 L462 510 L435 253Z" fill="#d6c3ad" opacity=".85"/>
+<path d="M320 208 Q400 180 480 208 L500 420 L530 940 Q400 990 270 940 L300 420Z" fill="#24211f" stroke="#a9553e" stroke-width="5"/><path d="M318 228 Q246 258 180 422 L235 470 Q300 392 355 298Z" fill="#24211f" stroke="#a9553e" stroke-width="5"/><path d="M482 228 Q554 258 620 422 L565 470 Q500 392 445 298Z" fill="#24211f" stroke="#a9553e" stroke-width="5"/><rect x="304" y="395" width="192" height="38" rx="4" fill="#8d2927"/><path d="M400 205 L400 908" stroke="#b48a55" stroke-width="6" opacity=".45"/><g color="#b48a55"><rect x="350" y="550" width="100" height="250" fill="url(#cloud)" opacity=".32"/></g></g><text x="400" y="1040" text-anchor="middle" font-family="Georgia,serif" font-size="22" letter-spacing="4" fill="#54483d">HAN · LOOK B · BACK</text></svg>
