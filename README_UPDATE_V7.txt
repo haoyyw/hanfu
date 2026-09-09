@@ -1,0 +1,1 @@
+Upload index.html, .nojekyll and assets/ to the repo root to replace the current site.\nThis v7 update replaces the dynasty section with two historically-inspired looks per dynasty, each shown front and back, removes the rotate viewer, and improves mobile layout.\n
