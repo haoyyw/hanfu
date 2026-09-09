@@ -14,7 +14,7 @@ Premium bilingual single-page website for a Hanfu and Chinese cultural experienc
 - Tea and Chinese pastry crossover with [PhDessert](https://haoyyw.github.io/PHDESSERT/)
 - Coming Soon Chinese cultural experiences
 - English / Chinese language switching
-- Local enquiry composer that copies a request without pretending an online booking was submitted
+- Local enquiry composer that creates a copyable request
 
 ## Preview locally
 
@@ -24,22 +24,14 @@ python3 -m http.server 8000
 
 Open `http://localhost:8000/`.
 
-## Tests
-
-The test suite uses only Node's built-in test runner.
-
-```bash
-node --test tests/site.test.mjs
-```
-
 ## Images
 
-First-release images are generated concept visuals stored as optimised WebP files in `assets/images/`. They are deliberately referenced through stable filenames so original photography can replace them later without changing layout or interaction code.
+The first release uses generated concept visuals under `assets/images/`, plus the existing PhDessert Chinese tasting-box visual for the crossover section. Original photography can later replace the stable asset paths without changing the page structure.
 
 ## Future 3D upgrade
 
-Version 1 uses a lightweight perspective interaction that works directly on GitHub Pages. A future true 3D garment viewer can replace the viewer internals with Three.js and `.glb/.gltf` assets while preserving the existing dynasty data and interface.
+Version 1 uses a lightweight perspective interaction that works directly on GitHub Pages. A future true 3D garment viewer can replace the viewer internals with Three.js and `.glb/.gltf` assets while preserving the dynasty interface.
 
 ## GitHub Pages
 
-The site is entirely static and can be served directly from the repository root. In GitHub, enable Pages for the `main` branch / repository root if the repository has not already been configured for Pages.
+The website is a static root-level `index.html` and can be served directly from the `main` branch.
