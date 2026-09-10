@@ -1,0 +1,99 @@
+name: Apply Apple-style parallax layout
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apple-parallax-upgrade.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index layout
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          if 'class="hero-scene"' not in s:
+              m = re.search(r'(<section class="hero" id="home">.*?</section>)(?=\n?<section class="section">)', s, flags=re.S)
+              if not m:
+                  raise SystemExit('hero section not found')
+              s = s[:m.start()] + '<div class="hero-scene">' + m.group(1) + '</div>' + s[m.end():]
+
+          css = '''
+          /* Scroll-scene + overflow hardening */
+          html,body{max-width:100%;overflow-x:hidden}
+          @supports (overflow:clip){html,body{overflow-x:clip}}
+          figure,img{max-width:100%}
+          .intro-grid>*,.heading>*,.stage>*,.editorial>*,.ceremonial-grid>*,.tea-grid>*,.dessert-grid>*,.coming-grid>*,.booking-grid>*,.complete>*{min-width:0}
+          .intro-grid,.heading{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr)}
+          .complete{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+          .editorial{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr)}
+          .ceremonial-grid{grid-template-columns:minmax(0,1fr) minmax(0,.9fr)}
+          .tea-grid,.dessert-grid,.coming-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+          .booking-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
+          .hero-scene{height:auto;background:#1b130e}
+          .hero,.hero>img,#dynasties .look-card,#ceremonial figure,#tea figure{overflow:hidden}
+          @supports (overflow:clip){.hero,.hero>img,#dynasties .look-card,#ceremonial figure,#tea figure{overflow:clip}}
+          #dynasties .look-card img,#ceremonial figure img,#tea figure img,.hero>img{transform-origin:center center;backface-visibility:hidden}
+          @media(min-width:901px){
+            .hero-scene{height:145svh;position:relative}
+            .hero-scene .hero{position:sticky;top:104px;height:calc(100svh - 104px);max-height:none;min-height:640px}
+            #dynasties{padding-bottom:18vh}
+            #dynasties .dynasty-stage{min-height:112vh;align-items:start}
+            #dynasties .dynasty-stage>div:first-child{position:sticky;top:132px;align-self:start;min-width:0}
+            #ceremonial .ceremonial-grid,#tea .tea-grid{min-height:122vh;align-items:start}
+            #ceremonial figure,#tea figure{position:sticky;top:132px;align-self:start;width:100%}
+            #ceremonial .ceremonial-copy,#tea .copy{padding-top:10vh}
+          }
+          @media(max-width:900px){
+            .hero-scene{height:auto}
+            .hero-scene .hero{position:relative;top:auto}
+            #dynasties .dynasty-stage>div:first-child,#ceremonial figure,#tea figure{position:relative;top:auto}
+          }
+          @media(prefers-reduced-motion:reduce){
+            .hero-scene{height:auto!important}
+            .hero-scene .hero,#dynasties .dynasty-stage>div:first-child,#ceremonial figure,#tea figure{position:relative!important;top:auto!important}
+          }
+          '''
+          if '/* Scroll-scene + overflow hardening */' not in s:
+              s = s.replace('@media(max-width:900px){', css + '\n@media(max-width:900px){', 1)
+          s = s.replace('body{overflow-x:hidden}', 'body{overflow-x:clip}')
+          p.write_text(s, encoding='utf-8')
+
+          required = ['class="hero-scene"', '/* Scroll-scene + overflow hardening */', '@media(min-width:901px)', 'position:sticky', 'minmax(0,1fr)', 'min-width:0']
+          missing = [x for x in required if x not in s]
+          if missing:
+              raise SystemExit('missing: ' + ', '.join(missing))
+
+      - name: Update index via GitHub API
+        shell: python
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          from pathlib import Path
+          import base64, json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          url = f'https://api.github.com/repos/{repo}/contents/index.html'
+          headers = {'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'}
+          req = urllib.request.Request(url + '?ref=main', headers=headers)
+          with urllib.request.urlopen(req) as r:
+              current = json.load(r)
+          payload = json.dumps({
+              'message': 'Upgrade to sticky scroll-depth scenes and fix overflow',
+              'content': base64.b64encode(Path('index.html').read_bytes()).decode(),
+              'sha': current['sha'],
+              'branch': 'main'
+          }).encode()
+          req = urllib.request.Request(url, data=payload, headers={**headers, 'Content-Type':'application/json'}, method='PUT')
+          with urllib.request.urlopen(req) as r:
+              result = json.load(r)
+          print(result['commit']['html_url'])
